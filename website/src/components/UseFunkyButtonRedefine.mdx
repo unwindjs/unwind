@@ -1,0 +1,12 @@
+<FunkyButton
+  // Omit the second 👇 parameter altogether to discard values from previous call
+  // highlight-start
+  className={({ active }) => [
+    'border-0 text-white rounded-full px-3 py-1 flex gap-x-2 items-center',
+    active ? 'bg-blue-600' : 'bg-blue-500',
+  ]}
+  // highlight-end
+  icon="👋"
+>
+  Click me!
+</FunkyButton>

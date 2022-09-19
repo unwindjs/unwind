@@ -1,0 +1,17 @@
+<FunkyButton
+  // highlight-start
+  className={{
+    [HOST_KEY]: ({ active }) => [
+      'border-0 text-white rounded-full px-3 py-1 flex gap-x-2 items-center',
+      `${active ? 'bg-blue-600' : 'bg-blue-500'}`,
+    ],
+    icon: ({ active }) => [
+      'border rounded-full w-7 h-7 -ml-2 inline-flex items-center justify-center',
+      active ? 'bg-white border-transparent' : 'border-white',
+    ],
+  }}
+  // highlight-end
+  icon="👋"
+>
+  Click me!
+</FunkyButton>

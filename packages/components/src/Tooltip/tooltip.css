@@ -1,0 +1,98 @@
+.uwi-tooltip {
+  --ON: initial;
+  --OFF: ;
+
+  --uwi-tooltip-container-padding: 1em;
+  --uwi-tooltip-padding-horizontal: 1em;
+  --uwi-tooltip-padding-vertical: 0.5em;
+  --uwi-tooltip-overflow: var(--value-when-scroll-on, auto) var(--value-when-scroll-off, initial);
+  --uwi-tooltip-white-space: var(--value-when-scroll-on, nowrap) var(--value-when-scroll-off, wrap);
+
+  align-items: center;
+  display: flex;
+  font-size: 12px;
+  justify-content: center;
+  margin: auto;
+  max-height: 100vh;
+  max-width: 100vw;
+  opacity: 0;
+  padding: var(--uwi-tooltip-container-padding);
+  pointer-events: none;
+  position: absolute;
+}
+
+.uwi-tooltip:where(.uwi-tooltip-scroll) {
+  --value-when-scroll-on: var(--ON);
+  --value-when-scroll-off: var(--OFF);
+}
+
+.uwi-tooltip:where(.not\:uwi-tooltip-scroll) {
+  --value-when-scroll-on: var(--Off);
+  --value-when-scroll-off: var(--ON);
+}
+
+.uwi-tooltip-body {
+  background-color: rgba(0, 0, 0, 0.9);
+  border-radius: 0.5em;
+  color: white;
+  font-family: monospace;
+  position: relative;
+}
+
+.uwi-tooltip-body-inner {
+  overflow: var(--uwi-tooltip-overflow);
+  padding: var(--uwi-tooltip-padding-vertical) var(--uwi-tooltip-padding-horizontal);
+  white-space: var(--uwi-tooltip-white-space);
+}
+
+.uwi-tooltip-body-scroller::after,
+.uwi-tooltip-body-scroller::before {
+  content: '';
+  display: block;
+  width: 1em;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.uwi-tooltip-body-scroller::after {
+  background: linear-gradient(90deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 1) 100%);
+  border-top-right-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
+  right: 0;
+}
+
+.uwi-tooltip-body-scroller::before {
+  background: linear-gradient(270deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 1) 100%);
+  left: 0;
+  border-top-left-radius: 0.5em;
+  border-bottom-left-radius: 0.5em;
+}
+
+.uwi-tooltip-position\:left {
+  justify-content: flex-end;
+  right: 100%;
+}
+
+.uwi-tooltip-position\:right {
+  justify-content: flex-start;
+  left: 100%;
+}
+
+.uwi-tooltip-position\:top {
+  bottom: 100%;
+}
+
+.uwi-tooltip-position\:bottom {
+  top: 100%;
+}
+
+.uwi-class-name-observer-container:hover .uwi-tooltip {
+  pointer-events: visible;
+  opacity: 1;
+}

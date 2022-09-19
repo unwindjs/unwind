@@ -1,0 +1,77 @@
+name: CI
+
+# Controls when the workflow will run
+on:
+  push:
+    branches: [main]
+    tags:
+      - "*"
+  pull_request:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "publish"
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - run: npm install -g pnpm
+      - run: pnpm install
+      - run: pnpm test && pnpm build:packages
+
+  publish-docs:
+    if: github.ref_type != 'tag'
+    needs: [test]
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - run: npm install -g pnpm
+      - run: pnpm install
+      - run: pnpm run build
+      - name: Setup Pages
+        uses: actions/configure-pages@v1
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: website/build
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
+
+  publish-npm:
+    if: github.event_name == 'push' && github.ref_type == 'tag'
+    needs: [test]
+    environment:
+      name: npm
+
+    runs-on: ubuntu-latest
+
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - run: npm install -g pnpm
+      - run: pnpm install
+      - run: pnpm run build:packages
+      - run: pnpm config set "//registry.npmjs.org/:_authToken" "$NPM_TOKEN"
+      - run: pnpm config set "git-tag-version" "false"
+      - run: pnpm recursive exec npm version "${GITHUB_REF:11}"
+      - run: pnpm recursive publish --access public --no-git-checks

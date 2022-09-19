@@ -1,0 +1,192 @@
+---
+title: Composing class names
+---
+
+import { CodeEditor } from '@site/src/components/CodeEditor'
+import _MyComponent from '!!raw-loader!./_MyComponent'
+import _ExtendNestedClassNameSimple from '!!raw-loader!./_ExtendNestedClassNameSimple'
+import _DefineNestedClassNameSimple from '!!raw-loader!./_DefineNestedClassNameSimple'
+
+# Composing class names
+
+A class name targeting styles of the sub-components created by composition.
+
+## Defining nested `className` value
+
+To define a nested class names for the sub-components use a [nested object](../../api/class-name/type/class-name-object).
+
+:::caution Object properties (keys) identifiers must start with lowercase or uppercase ASCII letter.
+The only exception being the [`HOST_KEY`](#host-key).
+:::
+
+<CodeEditor>{_DefineNestedClassNameSimple}</CodeEditor>
+
+### Reference
+
+- [Stateless class names](stateless-class-names)
+- [Stateful class names](stateful-class-names)
+- [type `ClassNameProp`](../../api/class-name/type/class-name-prop).
+
+### Merging any two class names
+
+To combine 2 class names use [`mergeClassNames()`](../../api/class-name/function/merge-class-names).
+It [transforms arguments into objects first](stateful-class-names#defining-with-a-method) and than deeply appends non-nested class name values to a special [`HOST_KEY`](#host-key) property while keeping the structure.
+
+<CodeEditor>{_ExtendNestedClassNameSimple}</CodeEditor>
+
+:::note Question: Can I use a different key, e.g. `container` or `&` for the host class name property?
+You could use any property than `HOST_KEY`. It you would require you to merge other types of values coming through `className` (e.g. `string`) prop
+with the values coming via nested `container` property together yourself.
+:::
+
+### Full example
+
+<CodeEditor>{_MyComponent}</CodeEditor>
+
+## HOST_KEY {#host-key}
+
+A `HOST_KEY` object property is used to hold [host class selector values](../../api/class-name/type/host-class-name.md)
+and the other alpha character keys can be used for sub-components.
+
+---
+
+### Representing `className` in Javascript
+
+Mapping own host element value and values of it's children onto simple object is not 1:1.
+Using `$` is a simple compromise to be able to represent nested class name bearing both class name of the host and sub-components.
+
+In markup languages like [XML](https://developer.mozilla.org/en-US/docs/Web/XML/XML_introduction), HTML, or JSX
+nodes can have attribute values **alongside** the children nodes.
+
+Options to mapping nested component tree onto object and vice versa:
+
+**1. Fails on either the host element or the children class names**
+
+<div className="container margin-after:p">
+<div className="row flex items:center gap:2">
+<div className="col--3 grow self:start">
+
+```jsx
+[ hostClassName ]
+```
+
+</div>
+<div className="col--1 self:start">
+  <p className="margin-vertical:pre">&harr;</p>
+</div>
+<div className="col--4 grow">
+
+```jsx
+<Button className={hostClassName}>
+  <Icon className={iconClassName} />
+  <Text className={textClassName} />
+</Button>
+```
+
+</div>
+<div className="col--1">
+  <p className="margin-vertical:pre">&harr;<br/>&harr;</p>
+</div>
+<div className="col--3 grow">
+
+```jsx
+{
+  icon: iconClassName,
+  text: textClassName,
+}
+```
+
+</div>
+</div>
+</div>
+
+**2. Works with `$` for the host element as well as for the children class names:**
+
+<div className="container margin-after:p">
+<div className="row flex items:center gap:2">
+<div className="col--3 grow">
+
+```jsx
+{
+  $: [ hostClassName ],
+  icon: iconClassName,
+  text: textClassName,
+}
+```
+
+</div>
+<div className="col--1">
+  <p className="margin-vertical:pre">&harr;<br/>&harr;<br/>&harr;</p>
+</div>
+<div className="col--8 grow">
+
+```jsx
+<Button className={hostClassName}>
+  <Icon className={iconClassName} />
+  <Text className={textClassName} />
+</Button>
+```
+
+</div>
+</div>
+</div>
+
+---
+
+### Why `$`?
+
+:::caution You should never use the literal value of the `HOST_KEY` directly, use import:
+```tsx
+import HOST_KEY from '@unwind/class-name'
+```
+:::
+
+
+Although Javascript is not limited to ASCII set, a `$` character:
+
+1. can be used without quotes in object property identifier (as well as alphanumeric, or `_`)
+2. can be the first character of in an identifier.
+3. is still quite easy to write (when needed)
+4. is more visible than `_`
+
+Using a `$` instead of a `'&'`in SASS or Less to denote host (parent) element is just a matter of ergonomics due `&` would require quotes whan writing or accessing the value.
+
+<div className="container">
+<div className="row flex items:center gap:2">
+<div className="col--5 grow">
+
+```tsx title="$"
+// Creating:
+const nested = {
+  $: ...,
+  ...,
+}
+
+// Accessing:
+nested.$
+```
+
+</div>
+<div className="col--2">vs.</div>
+<div className="col--5 grow">
+
+```tsx title="&"
+// Creating:
+const nested = {
+  '&': ...,
+  ...,
+}
+
+// Accessing:
+nested['&']
+```
+
+</div>
+</div>
+</div>
+
+---
+
+## Appendix
+
+&rarr; See also [JavaScript Reference &rarr; Lexical_grammar &rarr; Identifiers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#identifiers).

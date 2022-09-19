@@ -1,0 +1,11 @@
+.uwi-class-name-observer-container {
+  align-items: center;
+  justify-content: center;
+  display: inline-flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.uwi-class-name-observer-content {
+  display: contents;
+}

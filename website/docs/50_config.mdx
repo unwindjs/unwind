@@ -1,0 +1,77 @@
+---
+title: Config
+---
+
+# Configuring Unwind
+
+Unwind comes with few defaults you might want to opt-out or add according to your needs.
+
+**To opt-out of all built-in behavior add this before using other method from the package:**
+
+```tsx
+import { setClassNameConfig } from '@unwind/class-name'
+
+setClassNameConfig({
+  analyzeArgumentsLength: false,
+  transformFalsyValue: false,
+  transformNullishValue: false,
+  transformTruthyValue: false,
+})
+```
+
+## Options
+
+### `className.analyzeArgumentsLength` {#short-circuit-arguments}
+
+- type: `boolean`
+- default: `true`
+
+Sets whether `@unwind/class-name` should short-circuit resolve if a callback without a 2<sup>nd</sup> argument (previous class names) exists in array of class names.
+
+---
+
+### `className.transformFalsyValue` {#transform-falsy-value}
+
+- type: `StringClassNameTransformer` | `false`
+- default: built-in transformer `transformFalsyValue()`
+
+`transformFalsyValue()` removes `:false` or `-false` suffixes from every CSS class and instead adds `not:` prefix, e.g. `active:false` becomes `not:active`.
+
+Set to `false` to opt-out of this behavior or provide your own transformer.
+
+---
+
+### `className.transformTruthyValue` {#transform-truthy-value}
+
+- type: `StringClassNameTransformer` | `false`
+- default: built-in transformer `transformTruthyValue()`
+
+`transformTruthyValue()` removes `:true` or `-true` suffixes from every CSS class, e.g. `active:true` becomes `active`.
+
+Set to `false` to opt-out of this behavior or provide your own transformer.
+
+---
+
+### `className.transformNullishValue` {#transform-nullish-value}
+
+- type: `StringClassNameTransformer` | `false`
+- default: built-in transformer `transformNullishValue()`
+
+`transformNullishValue()` removes CSS classes ending with `:null`, `:undefined`, `-null`, or `-undefined`.
+
+Set to `false` to opt-out of this behavior or provide your own transformer.
+
+---
+
+### `className.transformations` {#transformations}
+
+- type: `StringClassNameTransformer[]`
+
+Define your own transformations to run with every [resolveClassName()](api/class-name/function/resolve-class-name).
+
+---
+
+## References
+
+- [type `ClassNameConfig`](api/class-name/type/class-name-config)
+- [type `StringClassNameTransformer`](api/class-name/type/string-class-name-transformer)

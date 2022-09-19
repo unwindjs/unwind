@@ -1,0 +1,26 @@
+---
+title: Resolving with delegate
+---
+
+import { CodeEditor } from '@site/src/components/CodeEditor'
+import _Delegation from '!!raw-loader!./_Delegation'
+
+# Delegating class name resolution
+
+When components wraps another components that are able to resolve _unwind_ class name,
+we need to delegate (forward responsibility) final resolution of the class name
+down to that wrapped component.
+
+It often is a case when we want to introduce a new state to a wrapped component.
+
+## Example
+
+<CodeEditor defaultValue="<div>...</div>" live render={`<div className="flex gap-4">
+  <Icon>👋</Icon>
+  <ToggleIcon>👋</ToggleIcon>
+  <ToggleIcon active>👋</ToggleIcon>
+</div>`}>{_Delegation}</CodeEditor>
+
+## References
+
+- [resolveClassNameDelegateFactory()](/docs/api/class-name/function/resolve-class-name-delegate-factory).

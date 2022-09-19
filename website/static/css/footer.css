@@ -1,0 +1,11 @@
+.light {
+  --sp-colors-accent: var(--ifm-color-primary);
+}
+
+.dark {
+  --sp-colors-accent: var(--ifm-color-primary);
+}
+
+.sp-layout {
+  border-radius: var(--ifm-code-border-radius);
+}

@@ -1,0 +1,82 @@
+import { CodeEditor } from '@site/src/components/CodeEditor'
+import _AvoidingRerendersBox from '!!raw-loader!./_AvoidingRerendersBox'
+
+# Avoiding re-renders in React
+
+`@unwind/class-name` allows your components to accept more complex value types than a simple string.
+React does a shallow compare when deciding whether to update components wrapped with [memo()](https://beta.reactjs.org/apis/react/memo#minimizng-props-changes).
+
+To avoid unnecessary re-renders due to `className` prop accepts types of values other than simple `string` type, make sure the value is referentially stable.
+
+Here are some of the options to mitigate re-rendering components:
+
+1. [Define values outside of the function component body](#outside) unless the value depends on props (or internal state).
+2. [Memoize value inside the function body](#memoized) when it depends on the props (or internal state).
+
+
+## Example
+
+In this example we define functional component `Box`.
+We can define `boxClassName` (the component's class name value) outside of the functional component (render block).
+
+:::caution
+Make sure the styles you create a are referentially stable too also when defining components.
+:::
+
+<CodeEditor live render={`<Box selected className="bg-white">
+  Box content
+</Box>`}>{`// Box.tsx\n${_AvoidingRerendersBox}`}
+</CodeEditor>
+
+:::tip
+We can also omit the second parameter of the [ClassNameCallback](/docs/api/class-name/type/class-name-callback) since it uses an `HTMLDivElement` element because its `className` prop accepts only a `string | undefined`.
+
+Omitting the previously generated class selectors would effectively remove every generated selector if we'd wrapped another _unwind_ component instead of the `HTMLDivElement`.
+:::
+
+---
+
+## 1. Outside of the function component body {#outside}
+
+<CodeEditor live render={`<MyWrapperComponent />`}>
+  {`// Box.tsx
+${_AvoidingRerendersBox}
+// MyWrapperComponent.tsx\n
+// 👇 Defining outside of the functional component body ensures referential stability
+const override = defineClassName(({ selected }, previous) => [
+  ...previous.filter(selector => !selector.startsWith('ring-')),
+  'bg-amber-400',
+  selected ? 'ring-2 ring-amber-500 ring-offset-2' : null,
+])\n
+const MyWrapperComponent = memo(() => (
+  <Box selected className={override}>
+    Box content
+  </Box>
+))
+`}
+</CodeEditor>
+
+## 2. Memoize value within the render method {#memoized}
+
+  - [`useMemo()`](https://beta.reactjs.org/apis/react/useMemo) to memoize arrays and objects;
+  - [`useCallback()`](https://beta.reactjs.org/apis/react/useCallback) to memoize callbacks.
+
+<CodeEditor live render={`<MyWrapperComponent color="lime" />`}>
+  {`// Box.tsx
+${_AvoidingRerendersBox}
+// MyWrapperComponent.tsx
+const MyWrapperComponent = memo(({ color = 'amber' }) => {
+  // 👇 Using useMemo() ensures referential stability across the renders
+  const override = useMemo(() => defineClassName(({ selected }, previous) => [
+    ...previous.filter(selector => !selector.startsWith('ring-')),
+    \`bg-\${color}-400\`,
+    selected ? \`ring-2 ring-\${color}-500 ring-offset-2\` : null,
+  ]), [color])\n
+  return (
+    <Box selected className={override}>
+      Box content
+    </Box>
+  )
+})
+`}
+</CodeEditor>

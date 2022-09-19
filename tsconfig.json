@@ -1,0 +1,15 @@
+{
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./packages/class-name"
+    },
+    {
+      "path": "./packages/components"
+    },
+    {
+      "path": "./website"
+    },
+  ],
+}

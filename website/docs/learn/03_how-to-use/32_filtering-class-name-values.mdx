@@ -1,0 +1,16 @@
+import { CodeEditor } from '@site/src/components/CodeEditor'
+import _Add from '!!raw-loader!./_Add'
+
+# Filtering class name selectors
+
+Example: Remove all but `border*` selectors and add `font-bold` selector:
+
+<CodeEditor
+  live
+  resultClassName={`{(state, provided) => [
+  ...provided.filter(
+    selector => !selector.startsWith('border')
+  ),
+  'font-bold',
+]}`}
+>{_Add}</CodeEditor>

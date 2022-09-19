@@ -1,0 +1,133 @@
+---
+sidebar_position: 1
+title: Quick start
+---
+
+import { CodeEditor } from '@site/src/components/CodeEditor'
+import { extractCodeBlockProps } from '@site/src//helpers/extractCodeBlockProps'
+
+import Tabs from '@theme/Tabs';
+import CodeBlock from '@theme/CodeBlock';
+import TabItem from '@theme/TabItem';
+import BrowserOnly from '@docusaurus/BrowserOnly'
+
+import _ButtonContents from '!!raw-loader!./_ButtonSimple.tsx'
+import _ButtonContentsDefined from '!!raw-loader!./_ButtonSimpleDefined.tsx'
+import _ButtonContentsNoState from '!!raw-loader!./_ButtonSimpleNoState.tsx'
+import _ButtonContentsWithState from '!!raw-loader!./_ButtonSimpleWithState.tsx'
+
+# Quick start
+
+**Unwind aims to be framework-agnostic. You can use React, Vue, Solid, Svelte or whatever you like, however…**
+
+- In this guide, we will cover how to _**unwind**_ the `className` prop of a typical `Button` component built with React.
+- Our goal is to enhance the `className` prop with `@unwind/class-name` so that it changes color when active state is set to `true`.
+
+## Prerequisites
+
+**1. Combining class selectors**<br />
+We will use [Array.join()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join) to get resulting `className` as string.
+You could be also using [clsx](https://www.npmjs.com/package/clsx), [classname](https://www.npmjs.com/package/classname), [template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)... you name it.
+
+**2. Example component**<br />
+We will use a `Button` component bellow styled with [Tailwind](https://tailwindcss.com/) classes.
+Tailwind is already [running in your browser](https://tailwindcss.com/docs/installation/play-cdn)
+to play with and provides style on demand while you edit the live previews.
+CSS stylesheet in your case might be coming from elsewhere but it should not matter for the sake of this guide.
+
+:::tip
+Go ahead, play with the code. Unless you remove the `App` declaration, the live preview should work.
+:::
+
+<CodeEditor live title="Button.tsx">{_ButtonContents}</CodeEditor>
+
+---
+
+## 1. Installation
+
+Add package to `package.json`
+
+<Tabs>
+  <TabItem value="pnpm" label="pnpm" default>
+    <CodeBlock language="bash">{`pnpm add @unwind/class-name`}</CodeBlock>
+  </TabItem>
+  <TabItem value="yarn" label="yarn">
+    <CodeBlock language="bash">{`yarn add @unwind/class-name`}</CodeBlock>
+  </TabItem>
+  <TabItem value="npm" label="npm">
+    <CodeBlock language="bash">{`npm install @unwind/class-name`}</CodeBlock>
+  </TabItem>
+</Tabs>
+
+---
+
+## 2. Rewriting the `className` prop
+
+1. Import from `@unwind/class-name`
+1. Replace base component styles with `defineClassName()`
+2. Replace `className` prop type with `ClassNameProp<...>`
+3. Replace `Array.join()` with `resolveClassName()`
+
+<div className="row">
+<div className="col col--6">
+
+<CodeEditor keepEmptyLines title="Button.tsx (before)">{_ButtonContents}</CodeEditor>
+
+</div>
+<div className="col col--6">
+
+<CodeEditor title="Button.tsx (after)">{_ButtonContentsDefined}</CodeEditor>
+
+</div>
+</div>
+
+---
+
+## 3. Add the active state
+
+**Unwind** lets you define how components should render `className` according to state with a callback.
+Lets add toggle state change to the `Button`.
+
+<div className="row">
+<div className="col col--6">
+
+<CodeEditor keepEmptyLines title="Button.tsx (before)">{_ButtonContentsNoState}</CodeEditor>
+
+</div>
+<div className="col col--6">
+
+<CodeEditor title="Button.tsx (after)">{_ButtonContentsWithState}</CodeEditor>
+
+</div>
+</div>
+
+---
+
+## 4. The final code
+
+We updated `className` prop to accept various types of values:
+
+<Tabs>
+  <TabItem value="add-string" label="Append class">
+    <CodeEditor live resultClassName={`"w-full"`}>{_ButtonContentsWithState}</CodeEditor>
+  </TabItem>
+  <TabItem value="add-string-list" label="Append string[]">
+    <CodeEditor live resultClassName={`{['w-full', 'rounded-full']}`}>{_ButtonContentsWithState}</CodeEditor>
+  </TabItem>
+  <TabItem value="redefined" label="Redefine colors altogether">
+    <CodeEditor live resultClassName={`{useCallback(({ active }, previous) => [
+  // 👇 you can filter previously generated classes (or remove altogether)...
+  ...previous.filter(selector => selector.indexOf('bg-') < 0
+    && selector.indexOf('text-')
+    && selector.indexOf('border-')
+  ),
+  // 👇 ... and add new classes
+  active
+    ? 'bg-orange-500 shadow-inner active:bg-orange-600'
+    : 'bg-indigo-500 hover:bg-indigo-400 active:bg-indigo-600',
+  active ? 'border-orange-600' : 'border-indigo-600',
+  'text-white',
+  'w-full',
+], [])}`}>{_ButtonContentsWithState}</CodeEditor>
+  </TabItem>
+</Tabs>

@@ -1,0 +1,3 @@
+- pnpm config set "git-tag-version" "false"
+- npm version from-git --git-tag-version false
+- pnpm publish --git-checks false  --dry-run  http://localhost:4873/:_authToken="M2I3OTE0MTFhNjUzMGNiYzM1ZDA0YjcwODcyNzE4ZDE6ZWJiMzhhNzhkZWI1YTRmMzkwMTZjNjkyYTJkZQ=="

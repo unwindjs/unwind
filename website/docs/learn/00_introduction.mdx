@@ -1,0 +1,117 @@
+---
+sidebar_position: 0
+---
+
+import DocCardList from '@theme/DocCardList'
+import Tabs from '@theme/Tabs';
+import CodeBlock from '@theme/CodeBlock';
+import TabItem from '@theme/TabItem';
+
+# Introduction
+
+## Motivation
+
+A simple request to add a component variation should not become a battle of specificities.
+The issues starts to pop especially when components are wrapped (or better say _trapped_) within other components.
+
+Fixing visual issues becomes complex and the _**"solution"**_ is usually to use a stronger selector.
+It is understandable, because there is no UI component that could support all of the use-cases you might come across.
+Touching the code of the UI component to fix the issue is not ideal either as your _fix_ might break something else.
+Hence, you are left with only _sane_ option to **add** an extra class selector to target your case.
+
+At that very point any component will become hard to extend and hard to maintain.
+And it will bite you later.
+
+## When to use
+
+**Components created with `@unwind/class-name` library gives you full control of the component look with a single prop.**
+
+You can create UI components that allow consumers:
+
+- **replace only the pieces that need to be changed**
+- **redefine everything from the scratch**
+
+All that without touching the original code of the component aligned with [the open–closed principle](https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle).
+This makes creating sharable UI components that allows changing provided styles a breeze.
+No more being unable to remove that one selector that causes you headaches in your case
+without fear of breaking someone elses code.
+
+Instead of default `string | undefined` values, with `@unwind/class-name` you can create components that can accept also other types of values:
+
+- [class name primitives](../api/class-name/type/class-name-primitive)
+- [class name callbacks](../api/class-name/type/class-name-callback)
+- [arrays of primitives or callbacks](../api/class-name/type/host-class-name)
+- [nested class name objects](../api/class-name/type/class-name-object)
+
+:::note Note that if your components rely on other than [CSS class selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors) to define their looks, you might not need this library at all.
+:::
+
+## Adoption in 2 (or 3) steps
+
+**Rewriting you components will consist of:**
+
+### Step 1: Re-define class names
+
+Redefining the class name (selectors) the component provides depending on how the class selectors are generated:
+
+<DocCardList
+	className="not:text--truncate"
+  items={[
+    {
+      "type": "link",
+      "label": "Stateless class names",
+      "href": "/docs/learn/defining-class-names/stateless-class-names",
+      "docId": "learn/defining-class-names/stateless-class-names"
+    },
+    {
+      "type": "link",
+      "label": "Stateful class names",
+      "href": "/docs/learn/defining-class-names/stateful-class-names",
+      "docId": "learn/defining-class-names/stateful-class-names"
+    },
+    {
+      "type": "link",
+      "label": "Composing class names",
+      "href": "/docs/learn/defining-class-names/composed-class-names",
+      "docId": "learn/defining-class-names/composed-class-names"
+    }
+  ]}
+/>
+
+### Step 2: Resolve class names back to string
+
+Depending on your component needs you might either want to resolve passed prop immediately or delegate resolution forward to a sub-component.
+
+<DocCardList
+  className="not:text--truncate"
+  items={[
+    {
+      "type": "link",
+      "label": "Resolving class names",
+      "href": "/docs/learn/resolving-class-names/resolving-class-names",
+      "docId": "learn/resolving-class-names/resolving-class-names"
+    },
+    {
+      "type": "link",
+      "label": "Resolving with delegate",
+      "href": "/docs/learn/resolving-class-names/delegating-class-name-resolution",
+      "docId": "learn/resolving-class-names/delegating-class-name-resolution"
+    }
+  ]}
+/>
+
+### Step 3: Update types (Typescript)
+
+In case you use Typescript, third step is to update the public API of your component to accept new types of values through the `className` prop (or any other of your choice).
+
+```tsx
+// highlight-next-line
+import type { ClassNameProp } from '@unwind/class-name'
+
+type Props = {
+	...
+	// highlight-next-line
+	className?: ClassNameProp<typeof ...>
+	...
+}
+```

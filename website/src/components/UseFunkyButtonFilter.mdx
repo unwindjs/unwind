@@ -1,0 +1,11 @@
+<FunkyButton
+  // highlight-start
+  className={({ active }, previous) => [
+    // 👇 keep the 'active'/'not:active' <button> classes
+    ...previous.filter(v => v.match(/active/)),
+  ]}
+  // highlight-end
+  icon="👋"
+>
+  Click me!
+</FunkyButton>

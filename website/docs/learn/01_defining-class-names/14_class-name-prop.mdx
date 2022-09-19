@@ -1,0 +1,57 @@
+---
+title: Prop type
+---
+
+# Defining the `className` prop type
+
+## Recommended method
+
+To define prop with `ClassNameProp` type utility pass it the current type of variable.
+This way if the definition of `componentClassName` changes, the type will update accordingly:
+
+```tsx
+const componentClassName = 'hello-world'
+
+export type ComponentProps = {
+  className?: ClassNameProp<typeof componentClassName>
+}
+```
+
+## Manually
+
+Defining prop manually might come handy when composing class names.
+To define nested class name prop is albeit verbose, possibly repetitive duplicate of the value definition.
+
+```tsx title="Stateless prop (following comments are interchangeable)"
+export type ComponentProps = {
+  className?: ClassNameProp
+  // className?: ClassNameProp<string>
+  // className?: ClassNameProp<string[]>
+  // className?: ClassNameProp<null>
+  // className?: ClassNameProp<undefined>
+}
+```
+
+```tsx title="Stateful prop"
+export type ComponentProps = {
+  className?: ClassNameProp<ClassNameCallback<{ active: boolean }>>
+}
+```
+
+```tsx title="Nested prop"
+export type ComponentProps = {
+  className?: ClassNameProp<{
+    [HOST_KEY]: ClassNameCallback<{ active: boolean },
+    header: {
+      [HOST_KEY]: ClassNameCallback<{ active: boolean },
+      title: {
+        [HOST_KEY]: ClassNameCallback<{ active: boolean },
+      }
+    },
+    footer: {
+      [HOST_KEY]: ClassNameCallback<{ active: boolean },
+      ClassNameCallback<{ active: boolean },
+    }
+  }>>
+}
+```

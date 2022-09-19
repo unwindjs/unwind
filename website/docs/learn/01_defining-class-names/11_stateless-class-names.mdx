@@ -1,0 +1,56 @@
+# Stateless class names
+
+**Any `className` defined to be independent from the component state or props is considered stateless.**
+
+**Type:** [ClassNamePrimitive](../../api/class-name/type/class-name-primitive)
+
+- Use when component class names should be generated **regardless of component's state or its props**
+- Use when you **do not intend to expose internal state or props (yet)**
+
+---
+
+## Defining stateless `className` value
+
+**Defining a stateless class name is no different than defining a variable:**
+
+```tsx
+// defined with a string...
+const componentClassName = 'my-icon my-icon-red'
+// ...or an array:
+const componentClassName = ['my-icon', 'my-icon-red']
+```
+
+:::note There is practically no difference between defining classes as strings or array of strings.
+Every string and array of strings will be split by space delimiter and provided as the second parameter to any [class selector callback](../../api/class-name/type/class-name-callback).
+:::
+
+---
+
+## Defining with a method
+
+When you use [`defineClassName()`](../../api/class-name/function/define-class-name) it turns your value into a [nested object](composed-class-names) under the hood.
+It is not required to do so, however it might be helpful to see the resulting object type when analyzing issues.
+
+<div className="container margin-after:p">
+<div className="row flex items:center gap:2">
+<div className="col--5 grow">
+
+```tsx title="Definition"
+const className = defineClassName(
+  'hello world'
+)
+```
+
+</div>
+<div className="col--2">&rarr;</div>
+<div className="col--5 grow">
+
+```tsx title="Resulting value"
+const className = {
+  [HOST_KEY]: ['hello', 'world']
+}
+```
+
+</div>
+</div>
+</div>
