@@ -3,4 +3,4 @@
 
 Unwind is a collection of tools for styling UI components with low selector specificity without sacrificing the reusability.
 
-[Quick start](https://www.unwindjs.dev/docs/quick-start)
+[Quick start](https://unwindjs.github.io/unwind/docs/quick-start)
