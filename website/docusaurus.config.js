@@ -10,8 +10,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 const config = {
   title: 'Unwind',
   tagline: 'Build powerful, composable and truly reusable UI components that stay out of everyone\'s way. ',
-  url: 'https://unwindjs.github.io/unwind/',
-  baseUrl: '/',
+  url: 'https://unwindjs.github.io/',
+  baseUrl: '/unwind/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
